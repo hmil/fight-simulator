@@ -1,4 +1,4 @@
-package com.adventure.hero;
+package com.adventure.hero.engine;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,50 +7,50 @@ public class World {
 
     public static final String SPACE = " ";
 
-    private List<Character> characters = new ArrayList<>();
+    private List<Player> players = new ArrayList<>();
     private boolean casualty = false;
 
-    public void addCharacter(Character character) {
-        this.characters.add(character);
+    public void addPlayer(Player player) {
+        this.players.add(player);
     }
 
     public boolean hasCasualty() {
         return casualty;
     }
 
-    public void kill(Character killer, Character killee) {
-        this.characters.remove(killee);
+    public void kill(Player killer, Player killee) {
+        this.players.remove(killee);
         System.out.println(killer + " killed " + killee + "!");
         this.casualty = true;
     }
 
     public void simulateStep() {
-        for (Character c : characters) {
+        for (Player c : players) {
             int decision = c.think();
-            int decisionType = (decision >> 1) & 0x03;
-            int position = characters.indexOf(c);
+            int decisionType = decision & 0x03; // Masks all but the two LSBs of the number.
+            int position = players.indexOf(c);
 
             switch(decisionType) {
                 case 0: // Heal
                     c.heal();
                     printAction(c.name, "heals", "himself");
                     break;
-                case 1: // Hit previous character
+                case 1: // Hit previous player
                     if (position == 0) {
-                        c.hit(characters.get(characters.size() - 1));
-                        printAction(c.name, "hits", characters.get(characters.size() - 1).name);
+                        c.hit(players.get(players.size() - 1));
+                        printAction(c.name, "hits", players.get(players.size() - 1).name);
                     } else {
-                        c.hit(characters.get(position - 1));
-                        printAction(c.name, "hits", characters.get(position - 1).name);
+                        c.hit(players.get(position - 1));
+                        printAction(c.name, "hits", players.get(position - 1).name);
                     }
                     break;
-                case 2: // Hit next character
-                    if (position == characters.size() - 1) {
-                        c.hit(characters.get(0));
-                        printAction(c.name, "hits", characters.get(0).name);
+                case 2: // Hit next player
+                    if (position == players.size() - 1) {
+                        c.hit(players.get(0));
+                        printAction(c.name, "hits", players.get(0).name);
                     } else {
-                        c.hit(characters.get(position + 1));
-                        printAction(c.name, "hits", characters.get(position + 1).name);
+                        c.hit(players.get(position + 1));
+                        printAction(c.name, "hits", players.get(position + 1).name);
                     }
                 default:
                     throw new IllegalArgumentException("Invalid decisionType: " + decisionType);
@@ -65,7 +65,7 @@ public class World {
 
     public void dumpState() {
         System.out.println("=== Game state:");
-        for (Character c : characters) {
+        for (Player c : players) {
             System.out.println(c.name + ": life=" + c.getLife() + ", stamina=" + c.getStamina());
         }
     }

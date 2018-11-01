@@ -1,31 +1,31 @@
-package com.adventure.hero;
+package com.adventure.hero.engine;
 
-public class Character {
+public class Player {
 
     /**
-     * The characters life. From 0 to 100
+     * The players life. From 0 to 100
      */
     private int life;
 
     /**
-     * The characters energy. From 0 to 100
+     * The players energy. From 0 to 100
      */
     private int stamina;
 
     /**
-     * How much damage per attack this character makes
+     * How much damage per attack this player makes
      */
     private final int damage;
 
     /**
-     * Name of this character
+     * Name of this player
      */
     public final String name;
 
 
     private final World world;
 
-    Character(
+    public Player(
             World world,
             String name,
             int initialLife,
@@ -43,7 +43,11 @@ public class Character {
         this.stamina += 40;
     }
 
-    public void hit(Character other) {
+    /**
+     * This player attempts to hits another player.
+     * @param other player that gets hit
+     */
+    public void hit(Player other) {
         if (this.stamina > 20) {
             this.stamina -= 20;
             other.life -= damage;
@@ -54,19 +58,16 @@ public class Character {
     }
 
     /**
-     * Decides what to do this turn. Possible return value:
+     * Decides what to do this turn.
      *
-     * lowest significant bit = target
-     *    0 = target is next player
-     *    1 = target is previous player
-     * bits 1 and 2 = action type
+     * @return The decision, encoded in the two least significant bits of an int, as follows:
      *    00 = heal self
-     *    01 = hit next character
-     *    10 = hit previous character
+     *    01 = hit next player
+     *    10 = hit previous player
      */
     public int think() {
-        // Because the decision takes 3 bits, we generate a random number from 0 to 7
-        return (int) Math.random() * 7;
+        // Because the decision takes 2 bits, we generate a random number from 0 (binary 00) to 3 (binary 11)
+        return (int) Math.random() * 3;
     }
 
     public int getLife() {
