@@ -3,7 +3,7 @@ package com.adventure.hero;
 import com.adventure.hero.engine.World;
 import com.adventure.hero.engine.Player;
 
-public class Game {
+public class FightSimulator {
 
     public static void main(String[] args) {
         World world = new World();
