@@ -27,10 +27,9 @@ public class World {
     public void simulateStep() {
         for (Player c : players) {
             int decision = c.think();
-            int decisionType = decision & 0x03; // Masks all but the two LSBs of the number.
             int position = players.indexOf(c);
 
-            switch(decisionType) {
+            switch(decision) {
                 case 0: // Heal
                     c.heal();
                     printAction(c.name, "heals", "himself");
@@ -53,7 +52,7 @@ public class World {
                         printAction(c.name, "hits", players.get(position + 1).name);
                     }
                 default:
-                    throw new IllegalArgumentException("Invalid decisionType: " + decisionType);
+                    throw new IllegalArgumentException("Invalid decisionType: " + decision);
             }
         }
     }

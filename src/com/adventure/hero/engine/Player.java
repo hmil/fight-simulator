@@ -60,13 +60,12 @@ public class Player {
     /**
      * Decides what to do this turn.
      *
-     * @return The decision, encoded in the two least significant bits of an int, as follows:
-     *    00 = heal self
-     *    01 = hit next player
-     *    10 = hit previous player
+     * @return The decision, which may take the following values
+     *    0 = heal self
+     *    1 = hit next player
+     *    2 = hit previous player
      */
     public int think() {
-        // Because the decision takes 2 bits, we generate a random number from 0 (binary 00) to 3 (binary 11)
         return (int) Math.random() * 3;
     }
 
